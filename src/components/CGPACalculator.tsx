@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -105,13 +105,12 @@ const CGPACalculator = () => {
           </Label>
           <Input
             id="subjectCount"
-            type="number"
-            min="1"
-            max="20"
+            type="text"
+            inputMode="numeric"
             value={subjectCount}
             onChange={handleSubjectCountChange}
             className="bg-gray-700/70 border-gray-600/50 text-white transition-all focus:ring-2 focus:ring-purple-500/50"
-            placeholder="Enter number of subjects"
+            placeholder="Enter number of subjects (max 20)"
           />
         </div>
       </motion.div>

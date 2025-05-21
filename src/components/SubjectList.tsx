@@ -36,13 +36,20 @@ const SubjectList: React.FC<SubjectListProps> = ({
               </Label>
               <Input
                 id={`marks-${subject.id}`}
-                type="number"
-                min="0"
-                max="100"
+                type="text"
+                inputMode="decimal"
                 value={subject.marks || ""}
-                onChange={(e) => onMarksChange(subject.id, parseInt(e.target.value) || 0)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const numValue = parseFloat(value);
+                  
+                  // Allow empty input or valid numbers
+                  if (value === "" || (!isNaN(numValue) && numValue >= 0 && numValue <= 100)) {
+                    onMarksChange(subject.id, value === "" ? 0 : numValue);
+                  }
+                }}
                 className="bg-gray-600/70 border-gray-600/50 text-white transition-all focus:ring-2 focus:ring-blue-500/50"
-                placeholder="0-100"
+                placeholder="Enter marks (0-100)"
               />
             </div>
           </motion.div>
