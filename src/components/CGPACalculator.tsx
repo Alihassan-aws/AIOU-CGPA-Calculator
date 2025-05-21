@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import SubjectList from "./SubjectList";
 import ResultsDisplay from "./ResultsDisplay";
 import { calculateGPA, getGrade } from "@/lib/gradeCalculator";
+import { motion } from "framer-motion";
 
 const CGPACalculator = () => {
   const [subjectCount, setSubjectCount] = useState<number>(1);
@@ -50,15 +51,6 @@ const CGPACalculator = () => {
     );
   };
 
-  // Handle subject name change
-  const handleNameChange = (id: number, name: string) => {
-    setSubjects(
-      subjects.map(subject => 
-        subject.id === id ? { ...subject, name } : subject
-      )
-    );
-  };
-
   // Calculate results
   const calculateResults = () => {
     if (subjects.length === 0) return;
@@ -76,11 +68,21 @@ const CGPACalculator = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-6 text-gray-100">Setup Your Calculation</h2>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="p-6 backdrop-blur-lg bg-gray-800/70 rounded-xl border border-gray-700/50 shadow-xl"
+    >
+      <motion.div 
+        className="mb-8"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.5 }}
+      >
+        <h2 className="text-xl font-bold mb-6 text-gradient bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Setup Your Calculation</h2>
         
-        <div className="mb-4">
+        <div className="mb-4 backdrop-blur-sm bg-gray-700/30 p-4 rounded-lg border border-gray-600/30 transition-all hover:shadow-lg">
           <Label htmlFor="subjectCount" className="text-gray-300 mb-2 block">
             Total number of subjects:
           </Label>
@@ -91,29 +93,47 @@ const CGPACalculator = () => {
             max="20"
             value={subjectCount}
             onChange={handleSubjectCountChange}
-            className="bg-gray-700 border-gray-600 text-white"
+            className="bg-gray-700/70 border-gray-600/50 text-white transition-all focus:ring-2 focus:ring-purple-500/50"
             placeholder="Enter number of subjects"
           />
         </div>
-      </div>
+      </motion.div>
 
-      <SubjectList 
-        subjects={subjects} 
-        onMarksChange={handleMarksChange}
-        onNameChange={handleNameChange}
-      />
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+        <SubjectList 
+          subjects={subjects} 
+          onMarksChange={handleMarksChange}
+        />
+      </motion.div>
       
-      <div className="mt-6 mb-8">
+      <motion.div 
+        className="mt-6 mb-8"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
         <Button 
           onClick={calculateResults} 
-          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3"
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20"
         >
           Calculate CGPA
         </Button>
-      </div>
+      </motion.div>
 
-      {results && <ResultsDisplay results={results} />}
-    </div>
+      {results && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+        >
+          <ResultsDisplay results={results} />
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 

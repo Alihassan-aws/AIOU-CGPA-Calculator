@@ -2,6 +2,7 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { motion } from "framer-motion";
 
 interface SubjectListProps {
   subjects: Array<{
@@ -10,39 +11,28 @@ interface SubjectListProps {
     marks: number;
   }>;
   onMarksChange: (id: number, value: number) => void;
-  onNameChange: (id: number, name: string) => void;
 }
 
 const SubjectList: React.FC<SubjectListProps> = ({ 
   subjects, 
-  onMarksChange,
-  onNameChange
+  onMarksChange
 }) => {
   return (
     <div className="space-y-5">
-      <h3 className="text-lg font-semibold text-gray-200">Enter Subject Details</h3>
+      <h3 className="text-lg font-semibold text-gray-200">Enter Subject Marks</h3>
       
-      <div className="max-h-[400px] overflow-y-auto pr-2 space-y-4">
-        {subjects.map((subject) => (
-          <div 
+      <div className="max-h-[400px] overflow-y-auto pr-2 space-y-4 scrollbar-hide">
+        {subjects.map((subject, index) => (
+          <motion.div 
             key={subject.id} 
-            className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-gray-700/50 border border-gray-700"
+            className="p-4 rounded-lg backdrop-blur-md bg-gray-700/40 border border-gray-600/50 transition-all hover:bg-gray-700/60"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
           >
-            <div className="col-span-1 md:col-span-2">
-              <Label htmlFor={`subject-${subject.id}`} className="text-sm text-gray-300 mb-1 block">
-                Subject Name
-              </Label>
-              <Input
-                id={`subject-${subject.id}`}
-                value={subject.name}
-                onChange={(e) => onNameChange(subject.id, e.target.value)}
-                className="bg-gray-600 border-gray-600 text-white"
-                placeholder="Subject Name"
-              />
-            </div>
             <div>
               <Label htmlFor={`marks-${subject.id}`} className="text-sm text-gray-300 mb-1 block">
-                Marks (out of 100)
+                Subject {subject.id} Marks (out of 100)
               </Label>
               <Input
                 id={`marks-${subject.id}`}
@@ -51,11 +41,11 @@ const SubjectList: React.FC<SubjectListProps> = ({
                 max="100"
                 value={subject.marks || ""}
                 onChange={(e) => onMarksChange(subject.id, parseInt(e.target.value) || 0)}
-                className="bg-gray-600 border-gray-600 text-white"
+                className="bg-gray-600/70 border-gray-600/50 text-white transition-all focus:ring-2 focus:ring-blue-500/50"
                 placeholder="0-100"
               />
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
