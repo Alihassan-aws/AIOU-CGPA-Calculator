@@ -32,7 +32,7 @@ const SubjectList: React.FC<SubjectListProps> = ({
           >
             <div>
               <Label htmlFor={`marks-${subject.id}`} className="text-sm text-gray-300 mb-1 block">
-                Subject {subject.id} Marks (out of 100)
+                Subject {index + 1} Marks (out of 100)
               </Label>
               <Input
                 id={`marks-${subject.id}`}

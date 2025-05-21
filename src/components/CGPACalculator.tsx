@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,7 @@ import { calculateGPA, getGrade } from "@/lib/gradeCalculator";
 import { motion } from "framer-motion";
 
 const CGPACalculator = () => {
-  const [subjectCount, setSubjectCount] = useState<number>(1);
+  const [subjectCount, setSubjectCount] = useState<string>("1");
   const [subjects, setSubjects] = useState<{ id: number; name: string; marks: number }[]>([
     { id: 1, name: "Subject 1", marks: 0 }
   ]);
@@ -21,11 +21,12 @@ const CGPACalculator = () => {
 
   // Handle subject count change
   const handleSubjectCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const count = parseInt(e.target.value, 10) || 0;
+    const inputValue = e.target.value;
+    setSubjectCount(inputValue);
+    
+    const count = parseInt(inputValue, 10) || 0;
     
     if (count > 0 && count <= 20) {
-      setSubjectCount(count);
-      
       // Update subject array based on new count
       if (count > subjects.length) {
         // Add more subjects
@@ -37,6 +38,22 @@ const CGPACalculator = () => {
       } else if (count < subjects.length) {
         // Remove excess subjects
         setSubjects(subjects.slice(0, count));
+      }
+    } else if (count <= 0) {
+      // If invalid input or zero, clear subjects
+      setSubjects([]);
+    } else if (count > 20) {
+      // Max 20 subjects
+      setSubjectCount("20");
+      
+      const newSubjects = [...subjects];
+      if (subjects.length < 20) {
+        for (let i = subjects.length + 1; i <= 20; i++) {
+          newSubjects.push({ id: i, name: `Subject ${i}`, marks: 0 });
+        }
+        setSubjects(newSubjects.slice(0, 20));
+      } else {
+        setSubjects(subjects.slice(0, 20));
       }
     }
   };
@@ -99,16 +116,18 @@ const CGPACalculator = () => {
         </div>
       </motion.div>
 
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        <SubjectList 
-          subjects={subjects} 
-          onMarksChange={handleMarksChange}
-        />
-      </motion.div>
+      {subjects.length > 0 && (
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <SubjectList 
+            subjects={subjects} 
+            onMarksChange={handleMarksChange}
+          />
+        </motion.div>
+      )}
       
       <motion.div 
         className="mt-6 mb-8"
@@ -118,7 +137,8 @@ const CGPACalculator = () => {
       >
         <Button 
           onClick={calculateResults} 
-          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20"
+          disabled={subjects.length === 0}
+          className={`w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 ${subjects.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           Calculate CGPA
         </Button>
