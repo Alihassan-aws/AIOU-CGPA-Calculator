@@ -1,15 +1,12 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner";
 import SubjectList from "./SubjectList";
 import ResultsDisplay from "./ResultsDisplay";
 import { calculateGPA, getGrade } from "@/lib/gradeCalculator";
 import { motion } from "framer-motion";
-import { Sun, Moon, Eye } from "lucide-react";
 
 const CGPACalculator = () => {
   const [subjectCount, setSubjectCount] = useState<string>("1");
@@ -21,17 +18,6 @@ const CGPACalculator = () => {
     percentage: number;
     grade: string;
   } | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
-
-  // Apply dark/light mode
-  useEffect(() => {
-    const htmlElement = document.documentElement;
-    if (isDarkMode) {
-      htmlElement.classList.remove("light");
-    } else {
-      htmlElement.classList.add("light");
-    }
-  }, [isDarkMode]);
 
   // Handle subject count change
   const handleSubjectCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,14 +82,6 @@ const CGPACalculator = () => {
       percentage,
       grade
     });
-
-    toast.success("Results calculated successfully!");
-  };
-
-  // Clear results
-  const clearResults = () => {
-    setResults(null);
-    toast.info("Results cleared");
   };
 
   return (
@@ -111,56 +89,18 @@ const CGPACalculator = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="p-6 glass-card rounded-xl border border-white/10 shadow-xl"
+      className="p-6 backdrop-blur-lg bg-gray-800/70 rounded-xl border border-gray-700/50 shadow-xl"
     >
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex flex-col items-start">
-          <motion.h2
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1, duration: 0.4 }}
-            className="text-xl font-bold text-gradient"
-          >
-            Setup Your Calculation
-          </motion.h2>
-        </div>
-        
-        <motion.div 
-          className="flex items-center space-x-4"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-        >
-          {results && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="flex items-center gap-1 text-sm" 
-              onClick={clearResults}
-            >
-              <Eye size={16} />
-              <span>Clear</span>
-            </Button>
-          )}
-          
-          <div className="flex items-center space-x-2">
-            <Moon size={16} className="text-blue-400" />
-            <Switch 
-              checked={!isDarkMode} 
-              onCheckedChange={(checked) => setIsDarkMode(!checked)} 
-            />
-            <Sun size={16} className="text-yellow-400" />
-          </div>
-        </motion.div>
-      </div>
-
       <motion.div 
+        className="mb-8"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.5 }}
       >
-        <div className="mb-6 glass-effect p-4 rounded-lg border border-white/10 transition-all hover:border-white/20">
-          <Label htmlFor="subjectCount" className="opacity-80 mb-2 block">
+        <h2 className="text-xl font-bold mb-6 text-gradient bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Setup Your Calculation</h2>
+        
+        <div className="mb-4 backdrop-blur-sm bg-gray-700/30 p-4 rounded-lg border border-gray-600/30 transition-all hover:shadow-lg">
+          <Label htmlFor="subjectCount" className="text-gray-300 mb-2 block">
             Total number of subjects:
           </Label>
           <Input
@@ -169,7 +109,7 @@ const CGPACalculator = () => {
             inputMode="numeric"
             value={subjectCount}
             onChange={handleSubjectCountChange}
-            className="glass-input"
+            className="bg-gray-700/70 border-gray-600/50 text-white transition-all focus:ring-2 focus:ring-purple-500/50"
             placeholder="Enter number of subjects (max 20)"
           />
         </div>
@@ -197,13 +137,21 @@ const CGPACalculator = () => {
         <Button 
           onClick={calculateResults} 
           disabled={subjects.length === 0}
-          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 ${subjects.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           Calculate CGPA
         </Button>
       </motion.div>
 
-      {results && <ResultsDisplay results={results} />}
+      {results && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+        >
+          <ResultsDisplay results={results} />
+        </motion.div>
+      )}
     </motion.div>
   );
 };
