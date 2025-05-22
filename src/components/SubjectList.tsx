@@ -73,12 +73,12 @@ const SubjectList: React.FC<SubjectListProps> = ({
                       const numValue = parseFloat(value);
                       
                       // Allow empty input or valid numbers between 0-4
-                      if (value === "" || (!isNaN(numValue) && numValue > 0 && numValue <= 4)) {
+                      if (value === "" || (!isNaN(numValue) && numValue >= 0 && numValue <= 4)) {
                         onCreditHoursChange(subject.id, value === "" ? 0 : numValue);
                       }
                     }}
                     className="glass-input"
-                    placeholder="Enter credit hours (1-4)"
+                    placeholder="Enter credit hours (0-4)"
                   />
                 </div>
               </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +7,6 @@ import SubjectList from "./SubjectList";
 import ResultsDisplay from "./ResultsDisplay";
 import { calculateGPA, getGrade } from "@/lib/gradeCalculator";
 import { motion } from "framer-motion";
-import { Eye } from "lucide-react";
 
 const CGPACalculator = () => {
   const [subjectCount, setSubjectCount] = useState<string>("1");
@@ -72,7 +70,7 @@ const CGPACalculator = () => {
   
   // Handle subject credit hours change
   const handleCreditHoursChange = (id: number, value: number) => {
-    const newValue = value <= 0 ? 1 : value > 4 ? 4 : value;
+    const newValue = value < 0 ? 0 : value > 4 ? 4 : value;
     setSubjects(
       subjects.map(subject => 
         subject.id === id ? { ...subject, creditHours: newValue } : subject
