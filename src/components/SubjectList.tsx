@@ -25,7 +25,7 @@ const SubjectList: React.FC<SubjectListProps> = ({
     <div className="space-y-5">
       <h3 className="text-lg font-semibold text-gradient">Enter Subject Marks & Credit Hours</h3>
       
-      <ScrollArea className="max-h-[350px] pr-2">
+      <ScrollArea className="h-[350px] pr-2">
         <div className="space-y-4 pr-2">
           {subjects.map((subject, index) => (
             <motion.div 
