@@ -10,17 +10,20 @@ interface SubjectListProps {
     id: number;
     name: string;
     marks: number;
+    creditHours: number;
   }>;
   onMarksChange: (id: number, value: number) => void;
+  onCreditHoursChange: (id: number, value: number) => void;
 }
 
 const SubjectList: React.FC<SubjectListProps> = ({ 
   subjects, 
-  onMarksChange
+  onMarksChange,
+  onCreditHoursChange
 }) => {
   return (
     <div className="space-y-5">
-      <h3 className="text-lg font-semibold text-gradient">Enter Subject Marks</h3>
+      <h3 className="text-lg font-semibold text-gradient">Enter Subject Marks & Credit Hours</h3>
       
       <ScrollArea className="max-h-[350px] pr-2">
         <div className="space-y-4 pr-2">
@@ -33,27 +36,51 @@ const SubjectList: React.FC<SubjectListProps> = ({
               transition={{ duration: 0.3, delay: index * 0.05 }}
               whileHover={{ scale: 1.02 }}
             >
-              <div>
-                <Label htmlFor={`marks-${subject.id}`} className="text-sm opacity-80 mb-1 block">
-                  Subject {index + 1} Marks (out of 100)
-                </Label>
-                <Input
-                  id={`marks-${subject.id}`}
-                  type="text"
-                  inputMode="decimal"
-                  value={subject.marks || ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const numValue = parseFloat(value);
-                    
-                    // Allow empty input or valid numbers
-                    if (value === "" || (!isNaN(numValue) && numValue >= 0 && numValue <= 100)) {
-                      onMarksChange(subject.id, value === "" ? 0 : numValue);
-                    }
-                  }}
-                  className="glass-input"
-                  placeholder="Enter marks (0-100)"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor={`marks-${subject.id}`} className="text-sm opacity-80 mb-1 block">
+                    Subject {index + 1} Marks (out of 100)
+                  </Label>
+                  <Input
+                    id={`marks-${subject.id}`}
+                    type="text"
+                    inputMode="decimal"
+                    value={subject.marks || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const numValue = parseFloat(value);
+                      
+                      // Allow empty input or valid numbers
+                      if (value === "" || (!isNaN(numValue) && numValue >= 0 && numValue <= 100)) {
+                        onMarksChange(subject.id, value === "" ? 0 : numValue);
+                      }
+                    }}
+                    className="glass-input"
+                    placeholder="Enter marks (0-100)"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor={`credit-${subject.id}`} className="text-sm opacity-80 mb-1 block">
+                    Credit Hours
+                  </Label>
+                  <Input
+                    id={`credit-${subject.id}`}
+                    type="text"
+                    inputMode="decimal"
+                    value={subject.creditHours || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const numValue = parseFloat(value);
+                      
+                      // Allow empty input or valid numbers
+                      if (value === "" || (!isNaN(numValue) && numValue > 0 && numValue <= 12)) {
+                        onCreditHoursChange(subject.id, value === "" ? 0 : numValue);
+                      }
+                    }}
+                    className="glass-input"
+                    placeholder="Enter credit hours (1-12)"
+                  />
+                </div>
               </div>
             </motion.div>
           ))}

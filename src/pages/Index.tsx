@@ -8,12 +8,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col transition-colors duration-300 light:from-gray-100 light:to-white light:text-gray-800">
       <motion.header 
-        className="py-6 shadow-lg border-b border-white/10 light:border-black/10"
+        className="py-4 sticky top-0 z-50 backdrop-blur-md bg-black/20 light:bg-white/20 border-b border-white/10 light:border-black/10 shadow-lg"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto px-4 flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div className="container mx-auto px-4 flex flex-row justify-between items-center">
           <div className="flex flex-col items-start">
             <motion.h1 
               className="text-2xl md:text-3xl font-bold text-gradient"
