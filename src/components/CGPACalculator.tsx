@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import SubjectList from "./SubjectList";
 import ResultsDisplay from "./ResultsDisplay";
-import { calculateGPA, getGrade } from "@/lib/gradeCalculator";
+import { calculateCGPA } from "@/lib/gradeCalculator";
 import { motion } from "framer-motion";
 
 const CGPACalculator = () => {
@@ -14,9 +15,14 @@ const CGPACalculator = () => {
     { id: 1, name: "Subject 1", marks: 0, creditHours: 3 }
   ]);
   const [results, setResults] = useState<{
-    gpa: number;
-    percentage: number;
-    grade: string;
+    cgpa: number;
+    totalCreditHours: number;
+    gradeDetails: Array<{
+      creditHours: number;
+      marks: number;
+      grade: string;
+      gp: number;
+    }>;
   } | null>(null);
 
   // Handle subject count change
@@ -82,22 +88,8 @@ const CGPACalculator = () => {
   const calculateResults = () => {
     if (subjects.length === 0) return;
 
-    // Calculate weighted average based on credit hours
-    const totalCreditHours = subjects.reduce((sum, subject) => sum + subject.creditHours, 0);
-    const totalWeightedMarks = subjects.reduce(
-      (sum, subject) => sum + (subject.marks * subject.creditHours), 0
-    );
-    
-    const percentage = totalCreditHours > 0 ? totalWeightedMarks / totalCreditHours : 0;
-    const gpa = calculateGPA(percentage);
-    const grade = getGrade(percentage);
-
-    setResults({
-      gpa,
-      percentage,
-      grade
-    });
-
+    const calculationResults = calculateCGPA(subjects);
+    setResults(calculationResults);
     toast.success("Results calculated successfully!");
   };
 

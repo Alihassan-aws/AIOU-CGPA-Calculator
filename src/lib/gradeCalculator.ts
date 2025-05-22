@@ -1,43 +1,62 @@
 
 /**
- * Calculate GPA based on the AIOU GPA scheme
+ * Calculate GPA based on the marks percentage
  * @param percentage - Percentage marks obtained
- * @returns GPA value
+ * @returns GPA value and grade
  */
-export const calculateGPA = (percentage: number): number => {
-  // Based on the AIOU GPA scheme from the provided image
-  if (percentage >= 80) return 4.0;
-  if (percentage >= 79) return 3.9;
-  if (percentage >= 78) return 3.8;
-  if (percentage >= 77) return 3.81;
-  if (percentage >= 76) return 3.74;
-  if (percentage >= 75) return 3.68;
-  if (percentage >= 74) return 3.61;
-  if (percentage >= 73) return 3.54;
-  if (percentage >= 72) return 3.47;
-  if (percentage >= 71) return 3.41;
-  if (percentage >= 70) return 3.34;
-  if (percentage >= 69) return 3.27;
-  if (percentage >= 68) return 3.21;
-  if (percentage >= 67) return 3.14;
-  if (percentage >= 66) return 3.07;
-  if (percentage >= 65) return 3.01;
-  if (percentage >= 64) return 2.94;
-  if (percentage >= 63) return 2.87;
-  if (percentage >= 62) return 2.80;
-  if (percentage >= 61) return 2.74;
-  if (percentage >= 60) return 2.67;
-  if (percentage >= 59) return 2.60;
-  if (percentage >= 58) return 2.54;
-  if (percentage >= 57) return 2.47;
-  if (percentage >= 56) return 2.40;
-  if (percentage >= 55) return 2.34;
-  if (percentage >= 54) return 2.27;
-  if (percentage >= 53) return 2.20;
-  if (percentage >= 52) return 2.13;
-  if (percentage >= 51) return 2.07;
-  if (percentage >= 50) return 2.00;
-  return 0; // Below 50% is fail
+export const calculateGPA = (percentage: number): {gpa: number, grade: string} => {
+  // Based on the grading scheme shown in the image
+  if (percentage >= 85) return { gpa: 4.00, grade: "A+" };
+  if (percentage >= 80) return { gpa: 3.70, grade: "A" };
+  if (percentage >= 75) return { gpa: 3.30, grade: "B+" };
+  if (percentage >= 70) return { gpa: 3.00, grade: "B" };
+  if (percentage >= 65) return { gpa: 2.70, grade: "C+" };
+  if (percentage >= 60) return { gpa: 2.30, grade: "C" };
+  if (percentage >= 55) return { gpa: 2.00, grade: "D+" };
+  if (percentage >= 50) return { gpa: 1.00, grade: "D" };
+  return { gpa: 0.00, grade: "F" }; // Below 50% is fail
+};
+
+/**
+ * Calculate CGPA based on subjects with credit hours and marks
+ * @param subjects - Array of subject objects with credit hours and marks
+ * @returns CGPA value, total credit hours, and grade details
+ */
+export const calculateCGPA = (
+  subjects: Array<{ creditHours: number; marks: number }>
+): {
+  cgpa: number;
+  totalCreditHours: number;
+  gradeDetails: Array<{ creditHours: number; marks: number; grade: string; gp: number }>;
+} => {
+  let totalQualityPoints = 0;
+  let totalCreditHours = 0;
+  const gradeDetails: Array<{ creditHours: number; marks: number; grade: string; gp: number }> = [];
+
+  subjects.forEach((subject) => {
+    if (subject.creditHours > 0) {
+      const { gpa, grade } = calculateGPA(subject.marks);
+      const qualityPoints = gpa * subject.creditHours;
+      
+      totalQualityPoints += qualityPoints;
+      totalCreditHours += subject.creditHours;
+      
+      gradeDetails.push({
+        creditHours: subject.creditHours,
+        marks: subject.marks,
+        grade: grade,
+        gp: gpa
+      });
+    }
+  });
+
+  const cgpa = totalCreditHours > 0 ? totalQualityPoints / totalCreditHours : 0;
+  
+  return {
+    cgpa,
+    totalCreditHours,
+    gradeDetails
+  };
 };
 
 /**
@@ -46,11 +65,5 @@ export const calculateGPA = (percentage: number): number => {
  * @returns Letter grade
  */
 export const getGrade = (percentage: number): string => {
-  // Based on AIOU grading scheme
-  if (percentage >= 80) return "A+";
-  if (percentage >= 70) return "A";
-  if (percentage >= 65) return "B";
-  if (percentage >= 50) return "C";
-  if (percentage >= 40) return "D";
-  return "F";
+  return calculateGPA(percentage).grade;
 };
