@@ -1,15 +1,14 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import SubjectList from "./SubjectList";
 import ResultsDisplay from "./ResultsDisplay";
 import { calculateGPA, getGrade } from "@/lib/gradeCalculator";
 import { motion } from "framer-motion";
-import { Sun, Moon, Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 
 const CGPACalculator = () => {
   const [subjectCount, setSubjectCount] = useState<string>("1");
@@ -21,17 +20,6 @@ const CGPACalculator = () => {
     percentage: number;
     grade: string;
   } | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
-
-  // Apply dark/light mode
-  useEffect(() => {
-    const htmlElement = document.documentElement;
-    if (isDarkMode) {
-      htmlElement.classList.remove("light");
-    } else {
-      htmlElement.classList.add("light");
-    }
-  }, [isDarkMode]);
 
   // Handle subject count change
   const handleSubjectCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +72,7 @@ const CGPACalculator = () => {
   
   // Handle subject credit hours change
   const handleCreditHoursChange = (id: number, value: number) => {
-    const newValue = value <= 0 ? 1 : value > 12 ? 12 : value;
+    const newValue = value <= 0 ? 1 : value > 4 ? 4 : value;
     setSubjects(
       subjects.map(subject => 
         subject.id === id ? { ...subject, creditHours: newValue } : subject
@@ -141,22 +129,6 @@ const CGPACalculator = () => {
             Setup Your Calculation
           </motion.h2>
         </div>
-        
-        <motion.div 
-          className="flex items-center space-x-4"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-        >
-          <div className="flex items-center space-x-2">
-            <Moon size={16} className="text-blue-400" />
-            <Switch 
-              checked={!isDarkMode} 
-              onCheckedChange={(checked) => setIsDarkMode(!checked)} 
-            />
-            <Sun size={16} className="text-yellow-400" />
-          </div>
-        </motion.div>
       </div>
 
       <motion.div 

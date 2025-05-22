@@ -61,7 +61,7 @@ const SubjectList: React.FC<SubjectListProps> = ({
                 </div>
                 <div>
                   <Label htmlFor={`credit-${subject.id}`} className="text-sm opacity-80 mb-1 block">
-                    Credit Hours
+                    Credit Hours (max 4)
                   </Label>
                   <Input
                     id={`credit-${subject.id}`}
@@ -72,13 +72,13 @@ const SubjectList: React.FC<SubjectListProps> = ({
                       const value = e.target.value;
                       const numValue = parseFloat(value);
                       
-                      // Allow empty input or valid numbers
-                      if (value === "" || (!isNaN(numValue) && numValue > 0 && numValue <= 12)) {
+                      // Allow empty input or valid numbers between 0-4
+                      if (value === "" || (!isNaN(numValue) && numValue > 0 && numValue <= 4)) {
                         onCreditHoursChange(subject.id, value === "" ? 0 : numValue);
                       }
                     }}
                     className="glass-input"
-                    placeholder="Enter credit hours (1-12)"
+                    placeholder="Enter credit hours (1-4)"
                   />
                 </div>
               </div>
